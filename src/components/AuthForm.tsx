@@ -22,6 +22,7 @@ import {
 import { Input } from "@/components/ui/input"
 import Link from "next/link"
 import { FIELD_NAMES, FIELD_TYPES } from "@/constans"
+import ImageUpload from "./ImageUpload"
 
 interface AuthformProps<T extends FieldValues> {
   schema: ZodType<T>
@@ -33,7 +34,7 @@ interface AuthformProps<T extends FieldValues> {
 const Authform = <T extends FieldValues>({
   schema,
   defaultvalues,
-  onSubmit,
+  // onSubmit,
   type,
 }: AuthformProps<T>) => {
   const isSignIn = type === "SIGN_IN"
@@ -67,27 +68,28 @@ const Authform = <T extends FieldValues>({
               name={field as Path<T>}
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="capitalize">
+                  <FormLabel
+                    className="capitalize"
+                    htmlFor={`${field.name}-form-item`}
+                  >
                     {FIELD_NAMES[field.name as keyof typeof FIELD_NAMES]}
                   </FormLabel>
                   <FormControl>
-                    {field.name === "universitycard" ? (
-                      <Input
-                        required
-                        type={
-                          FIELD_TYPES[field.name as keyof typeof FIELD_TYPES]
-                        }
-                        {...field}
-                        className="form-input"
+                    {field.name === "universityCard" ? (
+                      <ImageUpload
+                        id={`${field.name}-form-item`}
+                        onFileChange={field.onChange}
                       />
                     ) : (
                       <Input
+                        id={`${field.name}-form-item`}
                         required
                         type={
                           FIELD_TYPES[field.name as keyof typeof FIELD_TYPES]
                         }
                         {...field}
                         className="form-input"
+                        autoComplete="off"
                       />
                     )}
                   </FormControl>
