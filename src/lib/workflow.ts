@@ -24,7 +24,7 @@ export const sendEmail = async ({
       provider: resend({ token: config.env.resendToken }),
     },
     body: {
-      from: "Libverse <hello.amhadnusa.xyz>",
+      from: `${config.env.resendemail}`,
       to: [email],
       subject,
       html: message,
