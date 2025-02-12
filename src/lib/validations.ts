@@ -1,11 +1,40 @@
 import { z } from "zod"
 
+const passwordSchema = z.string().superRefine((password, ctx) => {
+  let message = ""
+  if (password.length < 8) {
+    message += "Password must be at least 8 characters long."
+  }
+  if (password.length > 20) {
+    message += "Password must be no more than 20 characters long."
+  }
+  if (!/[A-Z]/.test(password)) {
+    message += "Password must contain at least one uppercase letter."
+  }
+  if (!/[a-z]/.test(password)) {
+    message += "Password must contain at least one lowercase letter."
+  }
+  if (!/[0-9]/.test(password)) {
+    message += "Password must contain at least one number."
+  }
+  if (!/[!@#$%^&*]/.test(password)) {
+    message +=
+      "Password must contain at least one special character (!@#$%^&*)."
+  }
+  if (message.length > 0) {
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      message: message,
+    })
+  }
+})
+
 export const signUpSchema = z.object({
   fullName: z.string().min(3),
   email: z.string().email(),
   universityId: z.coerce.number(),
   universityCard: z.string().nonempty("University Card is required"),
-  password: z.string().min(8),
+  password: passwordSchema,
 })
 
 export const signInSchema = z.object({

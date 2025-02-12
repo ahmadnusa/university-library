@@ -25,6 +25,8 @@ import { FIELD_NAMES, FIELD_TYPES } from "@/constans"
 import ImageUpload from "./ImageUpload"
 import { toast } from "@/hooks/use-toast"
 import { useRouter } from "next/navigation"
+import { Eye, EyeOff } from "lucide-react"
+import { useState } from "react"
 
 interface AuthformProps<T extends FieldValues> {
   schema: ZodType<T>
@@ -38,12 +40,15 @@ const Authform = <T extends FieldValues>({
   onSubmit,
   type,
 }: AuthformProps<T>) => {
+  const [isVisible, setIsVisible] = useState<boolean>(false)
+  const toggleVisibility = () => setIsVisible((prevState) => !prevState)
   const { push } = useRouter()
   const isSignIn = type === "SIGN_IN"
   const form: UseFormReturn<T> = useForm({
     resolver: zodResolver(schema),
     defaultValues: defaultvalues as DefaultValues<T>,
   })
+  const passwordError = form.formState.errors?.password?.message
 
   const handleSubmit: SubmitHandler<T> = async (data) => {
     const result = await onSubmit(data)
@@ -101,19 +106,67 @@ const Authform = <T extends FieldValues>({
                         onFileChange={field.onChange}
                       />
                     ) : (
-                      <Input
-                        id={`${field.name}-form-item`}
-                        required
-                        type={
-                          FIELD_TYPES[field.name as keyof typeof FIELD_TYPES]
-                        }
-                        {...field}
-                        className="form-input"
-                        autoComplete="off"
-                      />
+                      <div className="relative">
+                        <Input
+                          id={`${field.name}-form-item`}
+                          required
+                          type={
+                            field.name === "password" && isVisible
+                              ? "text"
+                              : FIELD_TYPES[
+                                  field.name as keyof typeof FIELD_TYPES
+                                ]
+                          }
+                          {...field}
+                          className="form-input"
+                          autoComplete="off"
+                          onFocus={() => form.clearErrors(field.name)}
+                        />
+                        {field.name === "password" && (
+                          <button
+                            className="absolute inset-y-0 end-0 flex h-full w-12 items-center justify-center rounded-e-lg text-muted-foreground/80 outline-offset-2 transition-colors hover:text-muted focus:z-10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-ring/70 disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50"
+                            type="button"
+                            onClick={toggleVisibility}
+                            aria-label={
+                              isVisible ? "Hide password" : "Show password"
+                            }
+                            aria-pressed={isVisible}
+                            aria-controls="password"
+                          >
+                            {isVisible ? (
+                              <EyeOff
+                                size={20}
+                                strokeWidth={2}
+                                aria-hidden="true"
+                              />
+                            ) : (
+                              <Eye
+                                size={20}
+                                strokeWidth={2}
+                                aria-hidden="true"
+                              />
+                            )}
+                          </button>
+                        )}
+                      </div>
                     )}
                   </FormControl>
-                  <FormMessage />
+                  {!isSignIn &&
+                  field.name === "password" &&
+                  typeof passwordError === "string" ? (
+                    <ul className="list-disc pl-4 text-[0.8rem] font-medium text-destructive">
+                      {passwordError
+                        ?.split(".")
+                        .map(
+                          (message, index) =>
+                            message && (
+                              <li key={index + "-pwerror"}>{message.trim()}</li>
+                            ),
+                        )}
+                    </ul>
+                  ) : (
+                    <FormMessage />
+                  )}
                 </FormItem>
               )}
             />
