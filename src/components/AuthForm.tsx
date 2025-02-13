@@ -74,7 +74,7 @@ const Authform = <T extends FieldValues>({
   return (
     <div className="flex flex-col gap-4">
       <h1 className="text-2xl font-semibold text-white">
-        {isSignIn ? "Welcome back to BookWise" : "Create your library account"}
+        {isSignIn ? "Welcome back to LibVerse" : "Create your library account"}
       </h1>
       <p className="text-light-100">
         {isSignIn
@@ -94,7 +94,7 @@ const Authform = <T extends FieldValues>({
               render={({ field }) => (
                 <FormItem>
                   <FormLabel
-                    className="capitalize"
+                    className="capitalize text-light-100"
                     htmlFor={`${field.name}-form-item`}
                   >
                     {FIELD_NAMES[field.name as keyof typeof FIELD_NAMES]}
@@ -178,7 +178,7 @@ const Authform = <T extends FieldValues>({
       </Form>
 
       <p className="text-center text-base font-medium">
-        {isSignIn ? "New to BookWise? " : "Already have an account? "}
+        {isSignIn ? "New to LibVerse? " : "Already have an account? "}
 
         <Link
           href={isSignIn ? "/signup" : "signin"}

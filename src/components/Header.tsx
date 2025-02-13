@@ -18,7 +18,7 @@ const Header = ({ session }: { session: Session }) => {
           className="size-10"
           priority
         />
-        <h1 className="hidden font-bold text-white md:text-3xl">BookWise</h1>
+        <h1 className="hidden font-bold text-white md:text-3xl">LibVerse</h1>
       </Link>
       <ul className="flex flex-row items-center gap-8">
         <li>
