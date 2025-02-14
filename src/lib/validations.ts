@@ -42,7 +42,7 @@ export const signInSchema = z.object({
   password: z.string().min(8),
 })
 
-export const bookSCHEMA = z.object({
+export const bookSchema = z.object({
   title: z.string().trim().min(2).max(100),
   description: z.string().trim().min(10).max(1000),
   author: z.string().trim().min(2).max(100),
