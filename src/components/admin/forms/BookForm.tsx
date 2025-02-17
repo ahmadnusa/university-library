@@ -19,6 +19,7 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { useRouter } from "next/navigation"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
+import ColorPicker from "../ColorPicker"
 
 interface BookFormProps extends Partial<Book> {
   type?: "create" | "update"
@@ -43,23 +44,22 @@ const BookForm = ({ type, ...book }: BookFormProps) => {
   })
 
   const onSubmit = async (values: z.infer<typeof bookSchema>) => {
-    console.log(values)
-    // const result = await createBook(values)
+    const result = await createBook(values)
 
-    // if (result) {
-    //   toast({
-    //     title: "Success",
-    //     description: "Book created successfully"
-    //   })
+    if (result.success) {
+      toast({
+        title: "Success",
+        description: "Book created successfully",
+      })
 
-    //   push(`/admin/books${result.data.id}`)
-    // } else {
-    //   toast({
-    //     title: "Error",
-    //     description: "An error occurred while creating the book" ,
-    //     variant: "destructive"
-    //   })
-    // }
+      push(`/admin/books${result.data.id}`)
+    } else {
+      toast({
+        title: "Error",
+        description: "An error occurred while creating the book",
+        variant: "destructive",
+      })
+    }
   }
   return (
     <Form {...form}>
@@ -199,10 +199,19 @@ const BookForm = ({ type, ...book }: BookFormProps) => {
           name={"coverColor"}
           render={({ field }) => (
             <FormItem className="flex flex-col gap-1">
-              <FormLabel className="text-base font-normal text-dark-500">
+              <FormLabel
+                htmlFor={`${field.name}-form-item`}
+                className="text-base font-normal text-dark-500"
+              >
                 Primary Color
               </FormLabel>
-              <FormControl>{/* color picker */}</FormControl>
+              <FormControl>
+                <ColorPicker
+                  id={`${field.name}-form-item`}
+                  value={field.value}
+                  onPickerChange={field.onChange}
+                />
+              </FormControl>
               <FormMessage />
             </FormItem>
           )}

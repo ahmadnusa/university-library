@@ -59,6 +59,7 @@ const FileUpload = ({
   const ikUploadRef = useRef<HTMLInputElement>(null)
   const [file, setFile] = useState<{ filePath: string } | null>(null)
   const [progress, setprogress] = useState(0)
+  const [uploadSuccess, setUploadSuccess] = useState(false)
 
   const styles = {
     button:
@@ -78,6 +79,7 @@ const FileUpload = ({
   }
 
   const onSuccess = (res: { filePath: string }) => {
+    setUploadSuccess(true)
     setFile(res)
     onFileChange(res.filePath)
     toast({
@@ -158,7 +160,7 @@ const FileUpload = ({
         )}
       </button>
 
-      {progress > 0 && progress !== 100 && (
+      {progress > 0 && !uploadSuccess && (
         <div className="w-full rounded-full bg-green-200">
           <div className="progress" style={{ width: `${progress}%` }}>
             {progress}%

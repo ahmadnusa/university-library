@@ -6,7 +6,7 @@ import BookCover from "./BookCover"
 const BookOverview = ({
   title,
   author,
-  // genre,
+  genre,
   rating,
   total_copies,
   available_copies,
@@ -27,7 +27,7 @@ const BookOverview = ({
           </p>
           <p>
             Category{" "}
-            <span className="font-semibold text-light-200">{author}</span>
+            <span className="font-semibold text-light-200">{genre}</span>
           </p>
           <div className="flex flex-row place-items-center gap-1">
             <Image
