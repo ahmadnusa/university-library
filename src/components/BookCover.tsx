@@ -1,6 +1,9 @@
+"use client"
+
 import { cn } from "@/lib/utils"
 import BookCoverSvg from "./BookCoverSvg"
-import Image from "next/image"
+import { IKImage } from "imagekitio-next"
+import config from "@/lib/config"
 
 type BookCovervariant = "extraSmall" | "small" | "medium" | "regular" | "wide"
 
@@ -15,14 +18,14 @@ const variantStyles: Record<BookCovervariant, string> = {
 interface BookCoverProps {
   className?: string
   variant?: BookCovervariant
-  coverColer: string
+  coverColor: string
   coverImage: string
 }
 
 const BookCover = ({
   className,
   variant = "regular",
-  coverColer = "#012B48",
+  coverColor = "#012B48",
   coverImage = "https://placehold.co/400x600.png",
 }: BookCoverProps) => {
   return (
@@ -33,17 +36,18 @@ const BookCover = ({
         className,
       )}
     >
-      <BookCoverSvg coverColor={coverColer} />
+      <BookCoverSvg coverColor={coverColor} />
       <div
         className="absolute z-10"
         style={{ left: "12%", width: "87.5%", height: "88%" }}
       >
-        <Image
-          src={coverImage}
+        <IKImage
+          path={coverImage}
+          urlEndpoint={config.env.imageKit.urlEndpoint}
           alt="Book Cover"
           fill
-          sizes="100%"
           className="rounded-sm object-fill"
+          priority
         />
       </div>
     </div>
